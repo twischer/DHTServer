@@ -27,3 +27,5 @@
 *.out
 *.app
 /source/config.h
+*.b#?
+*.s#?
