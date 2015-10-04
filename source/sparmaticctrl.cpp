@@ -6,7 +6,7 @@
  #include "WProgram.h"
 #endif
 
-#define DELAY_IN_MS			20
+#define DELAY_IN_MS			100
 #define MIN_TEMPERATURE		7
 #define MAX_TEMPERATURE		30
 
