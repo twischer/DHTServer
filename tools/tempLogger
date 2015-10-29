@@ -1,5 +1,18 @@
 #! /bin/bash
 LOG_FILE="./temperatures"
+ESP_IP="192.168.0.106"
+
+# wait till the ESP is available
+COUNTER=20
+while [ 1 ]; do
+	ping -c1 ${ESP_IP} && break
+	
+	# exit if there were to much retries
+	((COUNTER--))
+	if [ $COUNTER -le 0 ]; then
+		exit 1
+	fi
+done
 
 DATE=`date +"%y-%m-%d" | xargs echo -n`
 DAY_LOG_FILE="${LOG_FILE}_${DATE}.csv"
@@ -10,9 +23,10 @@ if [ ! -f ${DAY_LOG_FILE} ]; then
 	echo "Date;Set temp (in °C);Actual temp (in °C);Humidity (in %);Window" >> ${DAY_LOG_FILE}
 fi
 
-# write current date and remove new line
-date +"%x %X" | xargs echo -n >> ${DAY_LOG_FILE}
-echo -n ";" >> ${DAY_LOG_FILE}
-wget -q -O- http://192.168.0.106/csv >> ${DAY_LOG_FILE}
-# add a new line
-echo >> ${DAY_LOG_FILE}
+
+DATA=`wget -q -O- http://${ESP_IP}/csv`
+
+# get current date and remove new line
+TIME=`date +"%x %X" | xargs echo -n`
+# write data to file
+echo $TIME";"$DATA >> ${DAY_LOG_FILE}
