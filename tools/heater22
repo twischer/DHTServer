@@ -1,0 +1,10 @@
+#! /bin/bash
+ESP_IP="192.168.0.106"
+TEMPERATURE=22
+
+# wait till the ESP is available
+while [ 1 ]; do
+	ping -c1 ${ESP_IP} && break
+done
+
+wget -O- http://${ESP_IP}/thermostat/set?temp=${TEMPERATURE} > /dev/null
