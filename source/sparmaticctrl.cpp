@@ -7,7 +7,7 @@
 #endif
 
 #define DELAY_IN_MS			100
-#define MIN_TEMPERATURE		7
+#define MIN_TEMPERATURE		8
 #define MAX_TEMPERATURE		30
 
 SparmaticCtrl::SparmaticCtrl(const uint8_t pin1, const uint8_t pin2) :
