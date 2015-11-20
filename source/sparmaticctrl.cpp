@@ -1,4 +1,5 @@
 #include "sparmaticctrl.h"
+#include <EEPROM.h>
 
 #if ARDUINO >= 100
  #include "Arduino.h"
@@ -6,9 +7,12 @@
  #include "WProgram.h"
 #endif
 
-#define DELAY_IN_MS			100
+#define DELAY_IN_MS			150
 #define MIN_TEMPERATURE		8
 #define MAX_TEMPERATURE		30
+
+#define TEMP_ADDRESS		0
+
 
 SparmaticCtrl::SparmaticCtrl(const uint8_t pin1, const uint8_t pin2) :
 	_pin1(pin1),
@@ -32,6 +36,23 @@ void SparmaticCtrl::begin(void)
 	 * is needed to deteckt the correct offset
 	 */
 	off();
+
+	EEPROM.begin(4);
+	const uint8_t lastTemp = EEPROM.read(TEMP_ADDRESS);
+
+	/* onyl restore the temperature,
+	 * if it is in an valid range
+	 */
+	if (lastTemp >= MIN_TEMPERATURE && lastTemp <= MAX_TEMPERATURE) {
+		setTemp(lastTemp);
+		Serial.print("Temperature: ");
+		Serial.print(lastTemp);
+		Serial.print(" restored\n");
+	} else {
+		Serial.print("Invalid temperature: ");
+		Serial.print(lastTemp);
+		Serial.print(" Not restoring!\n");
+	}
 }
 
 
@@ -99,6 +120,17 @@ void SparmaticCtrl::_saveTemp(const uint8_t newTemp)
 		_currentTemperature = newTemp;
 	}
 
+	Serial.print("Saving temperature: ");
+	Serial.print(_currentTemperature);
+	Serial.print(" to EEPROM\n");
+
+	/* save the current temperature
+	 * to restore it on a restart
+	 */
+	EEPROM.write(TEMP_ADDRESS, _currentTemperature);
+	if (!EEPROM.commit()) {
+		Serial.print("Saving failed!\n");
+	}
 }
 
 

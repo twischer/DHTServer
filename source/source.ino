@@ -14,6 +14,7 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <DHT.h>
+#include <EEPROM.h>
 #include "config.h"
 #include "sparmaticctrl.h"
 
@@ -111,6 +112,8 @@ void setup(void)
 {
 	// You can open the Arduino IDE Serial Monitor window to see what the code is doing
 	Serial.begin(115200);  // Serial connection from ESP-01 via 3.3v console cable
+	Serial.print("Serial init done.\n");
+
 	thermostat.begin();
 	dht.begin();           // initialize temperature sensor
 	
