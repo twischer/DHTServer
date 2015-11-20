@@ -8,7 +8,7 @@
 #endif
 
 #define DELAY_IN_MS			150
-#define MIN_TEMPERATURE		8
+#define MIN_TEMPERATURE		7
 #define MAX_TEMPERATURE		30
 
 #define TEMP_ADDRESS		0
